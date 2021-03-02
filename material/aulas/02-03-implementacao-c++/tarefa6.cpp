@@ -2,17 +2,21 @@
 #include <iomanip>  // std::setprecision
 #include <math.h>   // std::setprecision
 #include <vector>
-
+using namespace std;
 int main()
 {
     int n;
     std::cin >> n;
 
-    for (int i = 0; i < n; i++)
-    {
+    vector<double> x;
+    vector<double> y;
 
-        for (int j = 0; j < n; j++)
-        {
-        }
+    double inputX, inputY;
+
+    for (int i = 0; i < n * 2; i++)
+    {
+        cin >> inputX >> inputY;
+        x.push_back(inputX);
+        y.push_back(inputY);
     }
 }

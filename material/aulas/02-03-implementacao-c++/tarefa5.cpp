@@ -9,25 +9,27 @@ int main()
     std::cin >> n;
     std::vector<double> vec;
 
-    double a = 0;
+    // std::cout << n;
+    double a;
     for (int j = 0; j < n; j++)
     {
         std::cin >> a;
         vec.push_back(a);
     }
 
-    double media = 0;
-    double sigma = 0;
+    double media = 0.0;
+    double sigma = 0.0;
 
     for (int i = 0; i < n; i++)
     {
-        media += double(1 / n) * vec[i];
+        media += vec[i] / n;
     }
 
     for (int i = 0; i < n; i++)
     {
-        sigma += double(1 / n) * std::pow((vec[i] - media), 2);
+        sigma += std::pow((vec[i] - media), 2) / n;
     }
 
-    std::cout << "Saída: " << std::setprecision(15) << media << std::setprecision(15) << sigma << '\n';
+    std::cout << std::fixed;
+    std::cout << "Saída: " << std::setprecision(15) << media << " " << std::setprecision(15) << sigma << '\n';
 }
