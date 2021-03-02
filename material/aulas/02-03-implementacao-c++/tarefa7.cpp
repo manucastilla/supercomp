@@ -4,6 +4,33 @@
 #include <vector>
 using namespace std;
 
+void calcula_distancias(vector<vector<double>> &M, vector<double> &x, vector<double> &y) // argumento aqui
+{
+
+    int n;
+    n = x.size();
+    // n pegar pelo size
+    double deltaX;
+    double deltaY;
+    for (int i = 0; i < n; i++)
+    {
+        std::vector<double> l;
+        M.push_back(l);
+        for (int j = 0; j < n; j++)
+        {
+            if (i >= j)
+            {
+                M[i].push_back(M[i][j]);
+            }
+            else
+            {
+                deltaX = x[i] - x[j];
+                deltaY = y[i] - y[j];
+                M[i].push_back(sqrt(deltaX * deltaX + deltaY * deltaY));
+            }
+        }
+    }
+}
 int main()
 {
     int n;
@@ -24,20 +51,7 @@ int main()
     vector<vector<double>> D;
     // vetor intero é uma linha
 
-    double deltaX;
-    double deltaY;
-    for (int i = 0; i < n; i++)
-    {
-        std::vector<double> l;
-        for (int j = 0; j < n; j++)
-        {
-            deltaX = x[i] - x[j];
-            deltaY = y[i] - y[j];
-            l.push_back(sqrt(deltaX * deltaX + deltaY * deltaY));
-        }
-
-        D.push_back(l);
-    }
+    calcula_distancias(D, x, y);
 
     for (int i = 0; i < n; i++)
     {
@@ -48,4 +62,6 @@ int main()
         }
         std::cout << "\n";
     }
+
+    return 0;
 }
