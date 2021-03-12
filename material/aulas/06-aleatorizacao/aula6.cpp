@@ -66,35 +66,36 @@ int main()
     int T = 0; //objSel
     int peso_atual = 0;
     int valor_atual = 0;
-
+    int escolhido;
     for (int i = 0; i < nObj; i++)
     {
-        if (peso_atual + vec_itens[i].peso <= Wkilos)
+
+        double val_025 = distribution01(generator);
+
+        if (val_025 <= 0.25)
         {
-            double val_025 = distribution01(generator);
+            std::uniform_int_distribution<int> distribution(i, nObj - 1);
+            int valor_int = distribution(generator);
 
-            if (val_025 <= 0.25)
+            while (vec_itens[valor_int].used == 1)
             {
-                std::uniform_int_distribution<int> distribution(0, nObj - 1);
-                int valor_int = distribution(generator);
-
-                while (vec_itens[valor_int].used == 1)
-                {
-                    valor_int = distribution(generator);
-                }
-
-                // tentar um limite
-                resposta[T] = (vec_itens[valor_int].idx);
-                peso_atual += vec_itens[valor_int].peso;
-                valor_atual += vec_itens[valor_int].valor;
-            }
-            else
-            {
-                resposta[T] = (vec_itens[i].idx);
-                peso_atual += vec_itens[i].peso;
-                valor_atual += vec_itens[i].valor;
+                valor_int = distribution(generator);
             }
 
+            vec_itens[valor_int].used == 1;
+            escolhido = valor_int;
+        }
+
+        else
+        {
+            escolhido = i;
+        }
+
+        if (peso_atual + vec_itens[escolhido].peso <= Wkilos)
+        {
+            resposta[T] = (vec_itens[escolhido].idx);
+            peso_atual += vec_itens[escolhido].peso;
+            valor_atual += vec_itens[escolhido].valor;
             T += 1;
         }
     }
