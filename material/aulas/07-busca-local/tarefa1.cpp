@@ -1,5 +1,5 @@
-// g++ -Wall -O3 tarefa2.cpp -o tarefa2
-// ./tarefa2 < in1.txt
+// g++ -Wall -O3 tarefa1.cpp -o tarefa1
+// ./tarefa1 < in1.txt
 // sort algorithm example
 #include <iostream>  // std::cout
 #include <algorithm> // std::sort
@@ -23,7 +23,7 @@ typedef struct
     vector<int> ids;
 } Resp;
 
-Resp heuristica(int random, int n, int W, std::vector<item> itens)
+Resp local(int random, int n, int W, std::vector<item> itens)
 {
     vector<int> resposta(n, 0);
     int T = 0; //objSel
@@ -49,15 +49,32 @@ Resp heuristica(int random, int n, int W, std::vector<item> itens)
         }
     }
 
+    for (int i = 0; i < n; i++)
+    {
+        if (peso_atual + itens[i].peso <= W)
+        {
+            if (itens[i].used == false)
+            {
+                resposta[T] = (itens[i].idx);
+                peso_atual += itens[i].peso;
+                valor_atual += itens[i].valor;
+                T++;
+                itens[i].used = true;
+            }
+        }
+    }
+
     Resp R;
     R.peso = peso_atual;
     R.valor = valor_atual;
     R.ids.resize(T);
     R.ids = resposta;
 
+    for (int i = 0; i < n; i++)
+    {
+        R.ids[i] = resposta[i];
+    }
     return R;
-
-    cout << "\n";
 }
 
 int main()
@@ -93,13 +110,13 @@ int main()
     Resp a;
     Resp temp;
     int seed = distribution(generator);
-    a = heuristica(seed, n, W, itens);
+    a = local(seed, n, W, itens);
     int exec = 10;
 
     for (int i = 0; i < exec; i++)
     {
         int seed = distribution(generator);
-        temp = heuristica(seed, n, W, itens);
+        temp = local(seed, n, W, itens);
         if (a.valor < temp.valor)
         {
             a = temp;
@@ -109,7 +126,7 @@ int main()
     cout << "peso: " << a.peso << " "
          << "valor: " << a.valor << '\n';
 
-    for (int i = 0; i < a.ids.size(); i++)
+    for (int i = 0; i < (int)a.ids.size(); i++)
     {
         std::cout << a.ids[i] << " ";
     }

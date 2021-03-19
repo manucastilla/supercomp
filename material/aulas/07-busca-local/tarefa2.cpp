@@ -10,29 +10,22 @@ using namespace std;
 // 25% vc pega outro produto
 typedef struct
 {
-    double valor;
-    double peso;
+    int valor;
+    int peso;
     int idx;
     bool used;
 } item;
 
-void mais_caro(vector<item> &vec_itens)
+typedef struct
 {
-    sort(vec_itens.begin(), vec_itens.end(), [](const item &a, const item &b) {
-        return a.valor > b.valor;
-    });
-}
+    int peso;
+    int valor;
+    vector<int> ids;
+} Resp;
 
-void mais_leve(vector<item> &vec_itens)
+Resp heuristica(int random, int n, int W, std::vector<item> itens)
 {
-    sort(vec_itens.begin(), vec_itens.end(), [](const item &a, const item &b) {
-        return a.peso < b.peso;
-    });
-}
-
-void heuristica(int random, int n, int W, std::vector<item> itens)
-{
-    vector<double> resposta(n, 0);
+    vector<int> resposta(n, 0);
     int T = 0; //objSel
     int peso_atual = 0;
     int valor_atual = 0;
@@ -56,13 +49,14 @@ void heuristica(int random, int n, int W, std::vector<item> itens)
         }
     }
 
-    cout << "peso: " << peso_atual << " "
-         << "valor: " << valor_atual << '\n';
+    Resp R;
+    R.peso = peso_atual;
+    R.valor = valor_atual;
+    R.ids.resize(T);
+    R.ids = resposta;
 
-    for (int i = 0; i < T; i++)
-    {
-        std::cout << resposta[i] << " ";
-    }
+    return R;
+
     cout << "\n";
 }
 
@@ -94,17 +88,31 @@ int main()
     //     cout << vec_itens[i].used << '\n';
     // }
 
-    mais_caro(itens);
-
     std::default_random_engine generator;
-    std::uniform_int_distribution<int> distribution(0, 1000);
-
+    std::uniform_int_distribution<int> distribution(0, 100000);
+    Resp a;
+    Resp temp;
+    int seed = distribution(generator);
+    a = heuristica(seed, n, W, itens);
     int exec = 10;
 
     for (int i = 0; i < exec; i++)
     {
         int seed = distribution(generator);
-        heuristica(seed, n, W, itens);
+        temp = heuristica(seed, n, W, itens);
+        if (a.valor < temp.valor)
+        {
+            a = temp;
+        }
     }
+
+    cout << "peso: " << a.peso << " "
+         << "valor: " << a.valor << '\n';
+
+    for (int i = 0; i < a.ids.size(); i++)
+    {
+        std::cout << a.ids[i] << " ";
+    }
+    std::cout << '\n';
     return 0;
 }
