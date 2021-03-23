@@ -1,5 +1,7 @@
 // g++ -Wall -O3 tarefa.cpp -o tarefa &&./tarefa < in-aula.txt
 // sort algorithm example
+// git push exercicios master
+
 #include <iostream>  // std::cout
 #include <algorithm> // std::sort
 #include <vector>    // std::vector
