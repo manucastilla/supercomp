@@ -25,7 +25,8 @@ func(P, V, N, C, i)
 */
 
 int M(int N, vector<int> &P, vector<int> &V, int C,
-      int i, vector<bool> &used, vector<bool> &best, int &num_leaf, int &num_copy, vector<bool> &aux)
+      int i, vector<bool> &used, vector<bool> &best, int &num_leaf,
+      int &num_copy, vector<bool> &aux, vector<int> &bound, vector<int> &valoresBounds)
 {
     int valorUsed = 0;
     int valorBest = 0;
@@ -73,22 +74,22 @@ int M(int N, vector<int> &P, vector<int> &V, int C,
         }
     }
 
-    if (valorAux < valorBest)
+    if (valorAux + bound[i] <= valorBest)
     {
+        valoresBounds[i]++;
         return 0;
     }
 
-    // used[i] = 0;
     used[i] = false;
     int semItem, comItem;
 
-    semItem = M(N, P, V, C, i + 1, used, best, num_leaf, num_copy, aux);
+    semItem = M(N, P, V, C, i + 1, used, best, num_leaf, num_copy, aux, bound, valoresBounds);
 
     if (C - P[i] >= 0)
     {
-        // used[i] = 1;
+
         used[i] = true;
-        comItem = M(N, P, V, C - P[i], i + 1, used, best, num_leaf, num_copy, aux) + V[i];
+        comItem = M(N, P, V, C - P[i], i + 1, used, best, num_leaf, num_copy, aux, bound, valoresBounds) + V[i];
         return max(semItem, comItem);
     }
 
@@ -107,6 +108,8 @@ int main()
     vector<bool> used(n, false);
     vector<bool> best(n, false);
     vector<bool> aux(n, false);
+    vector<int> bound(n, 0);
+    vector<int> valoresBounds(n, 0);
 
     int wi, vi;
     for (int i = 0; i < n; i++)
@@ -119,7 +122,8 @@ int main()
 
     int num_leaf = 0;
     int num_copy = 0;
-    int Value = M(n, P, v, C, 0, used, best, num_leaf, num_copy, aux);
+
+    int Value = M(n, P, v, C, 0, used, best, num_leaf, num_copy, aux, bound, valoresBounds);
 
     int wTotal = 0;
     for (int i = 0; i < n; i++)
