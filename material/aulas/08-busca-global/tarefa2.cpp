@@ -45,7 +45,7 @@ int M(int N, vector<int> &P, vector<int> &V, int C, int i, vector<bool> &used, v
 
         if (valorUsed > valorBest)
         {
-            valorBest = valorUsed;
+            best = used;
         }
         return 0;
     }
@@ -97,7 +97,7 @@ int main()
             wTotal += P[i];
         }
     }
-    cout << wTotal << " " << Value << " " << '1' << "\n ";
+    cout << wTotal << " " << Value << " " << '1' << "\n";
     for (int i = 0; i < n; i++)
     {
         if (best[i])
