@@ -44,12 +44,14 @@ nav:
         - aulas/10-branch-and-bound/index.md
         - aulas/11-branch-and-bound/index.md
         - aulas/12-paralelismo/index.md
+        - aulas/13-paralelismo-tarefas-dados/index.md
 
     - Projeto:
         - projetos/index.md
         - projetos/heuristico.md
         - projetos/busca-local.md
         - projetos/busca-exaustiva.md
+        - projetos/relatorio-1.md
 
 
 extra_javascript:
