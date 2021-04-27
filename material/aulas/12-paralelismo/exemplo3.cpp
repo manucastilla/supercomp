@@ -1,13 +1,15 @@
+// g++ -O3 exemplo3.cpp -o exemplo3 -fopenmp && ./exemplo3
 #include <iostream>
 #include <omp.h>
 
-int main() {
-    #pragma omp parallel 
+int main()
+{
+#pragma omp parallel
     {
-        #pragma omp master 
+#pragma omp master
         {
             std::cout << "só roda uma vez na thread:" << omp_get_thread_num() << "\n";
-            #pragma omp task 
+#pragma omp task
             {
                 std::cout << "Estou rodando na thread:" << omp_get_thread_num() << "\n";
             }
