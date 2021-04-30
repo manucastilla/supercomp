@@ -1,4 +1,5 @@
-// g++ -O3 pi_recursivo.cpp -o pi_recursivo -fopenmp && ./pi_recursivo
+// g++ -O3 pi_recursivo-task.cpp -o pi_recursivo-task -fopenmp && time ./pi_recursivo-task
+// 3.81436294689775 secs
 #include <omp.h>
 #include <iostream>
 #include <iomanip>
@@ -7,16 +8,32 @@ static long num_steps = 1024l * 1024 * 1024 * 2;
 #define MIN_BLK 1024 * 1024 * 256
 
 double sum = 0;
+double sum_1 = 0;
 
 void pi_r(long Nstart, long Nfinish, double step)
 {
-    long i, iblk;
+    long i, j, iblk;
     if (Nfinish - Nstart < MIN_BLK)
     {
-        for (i = Nstart; i < Nfinish; i++)
+#pragma omp parallel
         {
-            double x = (i + 0.5) * step;
-            sum += 4.0 / (1.0 + x * x);
+#pragma omp master
+            {
+#pragma omp task
+                for (i = Nstart; i < Nfinish; i++)
+                {
+                    double x = (i + 0.5) * step;
+                    sum += 4.0 / (1.0 + x * x);
+                }
+
+#pragma omp task
+                for (j = Nstart; j < Nfinish; j++)
+                {
+                    double y = (j + 0.5) * step;
+                    sum_1 += 4.0 / (1.0 + y * y);
+                }
+#pragma omp taskwait
+            }
         }
     }
     else
@@ -25,11 +42,13 @@ void pi_r(long Nstart, long Nfinish, double step)
         pi_r(Nstart, Nfinish - iblk / 2, step);
         pi_r(Nfinish - iblk / 2, Nfinish, step);
     }
+
+    sum = sum + sum_1;
 }
 
 int main()
 {
-    long i;
+    long i, j;
     double step, pi;
     double init_time, final_time;
     step = 1.0 / (double)num_steps;

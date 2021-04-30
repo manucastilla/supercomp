@@ -1,4 +1,5 @@
 // g++ -O3 pi-numeric-integration-par.cpp -o pi-numeric-integration-par -fopenmp && ./pi-numeric-integration-par
+// 0m0.847s
 #include <iostream>
 #include <chrono>
 

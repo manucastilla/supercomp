@@ -1,10 +1,12 @@
-// g++ -O3 pi_recursivo.cpp -o pi_recursivo -fopenmp && ./pi_recursivo
+// g++ -O3 pi_recursivo-par.cpp -o pi_recursivo-par -fopenmp && ./pi_recursivo-par
 #include <omp.h>
 #include <iostream>
 #include <iomanip>
 static long num_steps = 1024l * 1024 * 1024 * 2;
 
-#define MIN_BLK 1024 * 1024 * 256
+#define MIN_BLK 1024 * 1024 * 256 // 0.726577301044017 secs
+// #define MIN_BLK 3000 * 1024 * 256 // 0.498827611561865 secs
+// #define MIN_BLK 500 * 1024 * 256 // 0.63110600085929  secs
 
 double sum = 0;
 
@@ -13,6 +15,7 @@ void pi_r(long Nstart, long Nfinish, double step)
     long i, iblk;
     if (Nfinish - Nstart < MIN_BLK)
     {
+#pragma omp parallel for
         for (i = Nstart; i < Nfinish; i++)
         {
             double x = (i + 0.5) * step;
