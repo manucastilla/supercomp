@@ -8,6 +8,8 @@ static long num_steps = 1024l * 1024 * 1024 * 2;
 // #define MIN_BLK 3000 * 1024 * 256 // 0.498827611561865 secs
 // #define MIN_BLK 500 * 1024 * 256 // 0.63110600085929  secs
 
+// com for reduction 0m0.640s
+
 double sum = 0;
 
 void pi_r(long Nstart, long Nfinish, double step)
@@ -15,7 +17,8 @@ void pi_r(long Nstart, long Nfinish, double step)
     long i, iblk;
     if (Nfinish - Nstart < MIN_BLK)
     {
-#pragma omp parallel for
+#pragma omp parallel for reduction(+ \
+                                   : sum)
         for (i = Nstart; i < Nfinish; i++)
         {
             double x = (i + 0.5) * step;
