@@ -1,4 +1,4 @@
-//g++ -O3 vetor_insert.cpp -o vetor_insert -fopenmp && time ./vetor_insert
+//g++ -O3 vetor_insert_critical.cpp -o vetor_insert_critical -fopenmp && time ./vetor_insert_critical
 #include <vector>
 #include <iostream>
 #include <cstdlib>
@@ -12,15 +12,18 @@ double conta_complexa(int i)
 
 int main()
 {
-	int N = 10000;
+	int N = 100;
 	std::vector<double> vec;
 
-#pragma omp parallel for
+#pragma omp parallel for //default(none) shared(vec)
 	for (int i = 0; i < N; i++)
 	{
-		vec.push_back(conta_complexa(i));
+#pragma omp critical
+		{
+			vec.push_back(conta_complexa(i));
+		}
 	}
-	// #pragma omp parallel for
+
 	for (int i = 0; i < N; i++)
 	{
 		std::cout << i << " ";

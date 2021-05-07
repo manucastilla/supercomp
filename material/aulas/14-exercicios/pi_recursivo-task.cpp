@@ -7,43 +7,43 @@ static long num_steps = 1024l * 1024 * 1024 * 2;
 
 #define MIN_BLK 1024 * 1024 * 256
 
-double sum = 0;
-double sum_1 = 0;
-
-void pi_r(long Nstart, long Nfinish, double step)
+double pi_r(long Nstart, long Nfinish, double step)
 {
-    long i, j, iblk;
+    double sum = 0;
+    long i, j;
     if (Nfinish - Nstart < MIN_BLK)
+    {
+
+        for (j = Nstart; j < Nfinish; j++)
+        {
+            double y = (j + 0.5) * step;
+            sum += 4.0 / (1.0 + y * y);
+        }
+    }
+
+    else
     {
 #pragma omp parallel
         {
 #pragma omp master
             {
-#pragma omp task
-                for (i = Nstart; i < Nfinish; i++)
+                long iblk = Nfinish - Nstart;
+                double sum1, sum2;
+#pragma omp task shared(sum1)
                 {
-                    double x = (i + 0.5) * step;
-                    sum += 4.0 / (1.0 + x * x);
+                    sum1 = pi_r(Nstart, Nfinish - iblk / 2, step);
                 }
-
-#pragma omp task
-                for (j = Nstart; j < Nfinish; j++)
+#pragma omp task shared(sum2)
                 {
-                    double y = (j + 0.5) * step;
-                    sum_1 += 4.0 / (1.0 + y * y);
+                    sum2 = pi_r(Nfinish - iblk / 2, Nfinish, step);
                 }
-#pragma omp taskwait
+#pragma omp taskwait;
+                sum = sum2 + sum1;
             }
         }
     }
-    else
-    {
-        iblk = Nfinish - Nstart;
-        pi_r(Nstart, Nfinish - iblk / 2, step);
-        pi_r(Nfinish - iblk / 2, Nfinish, step);
-    }
 
-    sum = sum + sum_1;
+    return sum;
 }
 
 int main()
@@ -53,7 +53,7 @@ int main()
     double init_time, final_time;
     step = 1.0 / (double)num_steps;
     init_time = omp_get_wtime();
-    pi_r(0, num_steps, step);
+    double sum = pi_r(0, num_steps, step);
     pi = step * sum;
     final_time = omp_get_wtime() - init_time;
 
