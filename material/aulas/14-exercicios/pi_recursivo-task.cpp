@@ -29,7 +29,7 @@ double pi_r(long Nstart, long Nfinish, double step)
             {
                 long iblk = Nfinish - Nstart;
                 double sum1, sum2;
-#pragma omp task shared(sum1)
+#pragma omp task shared(sum1) // task é padrão o firstprivate
                 {
                     sum1 = pi_r(Nstart, Nfinish - iblk / 2, step);
                 }
